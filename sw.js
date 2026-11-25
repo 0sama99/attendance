@@ -1,8 +1,13 @@
 // Network-first: phones always get the newest version when online; the cached copy opens the page offline
 // (punching itself always needs the internet because the time comes from the server).
-var CACHE = 'moussa-attendance-v1';
+var CACHE = 'moussa-attendance-v2'; // v2: new app icon
 self.addEventListener('install', function () { self.skipWaiting(); });
-self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
+self.addEventListener('activate', function (e) {
+  // drop older caches (old icons) and take over open pages
+  e.waitUntil(caches.keys().then(function (keys) {
+    return Promise.all(keys.filter(function (k) { return k.indexOf('moussa-attendance-') === 0 && k !== CACHE; }).map(function (k) { return caches.delete(k); }));
+  }).then(function () { return self.clients.claim(); }));
+});
 self.addEventListener('fetch', function (e) {
   var req = e.request;
   if (req.method !== 'GET') return;
