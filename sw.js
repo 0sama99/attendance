@@ -1,6 +1,6 @@
 // Network-first: phones always get the newest version when online; the cached copy opens the page offline
 // (punching itself always needs the internet because the time comes from the server).
-var CACHE = 'moussa-attendance-v3'; // v3: flexible schedule, work days, phone / WhatsApp, map pin (v2: new app icon)
+var CACHE = 'moussa-attendance-v4'; // v4: loans (installments in payroll) (v3: flexible schedule, work days, phone / WhatsApp, map pin; v2: new app icon)
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
   // drop older caches (old icons) and take over open pages
