@@ -1,6 +1,6 @@
 // Network-first: phones always get the newest version when online; the cached copy opens the page offline
 // (punching itself always needs the internet because the time comes from the server).
-var CACHE = 'moussa-attendance-v4'; // v4: loans (installments in payroll) (v3: flexible schedule, work days, phone / WhatsApp, map pin; v2: new app icon)
+var CACHE = 'moussa-attendance-v5'; // v5: version.json never cached (open pages reload to the newest build); v4: loans (installments in payroll) (v3: flexible schedule, work days, phone / WhatsApp, map pin; v2: new app icon)
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
   // drop older caches (old icons) and take over open pages
@@ -13,6 +13,7 @@ self.addEventListener('fetch', function (e) {
   if (req.method !== 'GET') return;
   var url = new URL(req.url);
   if (url.origin !== location.origin || url.pathname.indexOf('/attendance/') !== 0) return;
+  if (url.pathname.slice(-13) === '/version.json') return; // always from the network (update check)
   e.respondWith(fetch(req).then(function (res) {
     if (res.ok) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); }); }
     return res;
